@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagService } from './tag.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from 'src/entities/tag.entity';
+import { Tag } from 'src/db/entities/tag.entity';
 import { ConfigService } from '@nestjs/config';
 
 describe('TagService', () => {

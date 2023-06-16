@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError, Repository } from 'typeorm';
-import { Streaming } from 'src/entities/streaming.entity';
+import { Streaming } from 'src/db/entities/streaming.entity';
 import { StreamingDto } from './dto/streaming.dto';
 
 @Injectable()

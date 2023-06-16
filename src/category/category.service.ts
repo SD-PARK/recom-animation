@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Category } from 'src/entities/category.entity';
+import { Category } from 'src/db/entities/category.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { CategoryDto } from './dto/category.dto';
 

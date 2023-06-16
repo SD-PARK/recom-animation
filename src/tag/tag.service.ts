@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { TagDto } from './dto/tag.dto';
-import { Tag } from 'src/entities/tag.entity';
+import { Tag } from 'src/db/entities/tag.entity';
 
 @Injectable()
 export class TagService {

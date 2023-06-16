@@ -5,7 +5,7 @@ import { AniamtionInfoDto } from './dto/animation-info.dto';
 import { CategoryService } from 'src/category/category.service';
 import { TagService } from 'src/tag/tag.service';
 import { StreamingService } from 'src/streaming/streaming.service';
-import { AnimationInfo } from 'src/entities/animation-info.entity';
+import { AnimationInfo } from 'src/db/entities/animation-info.entity';
 
 @Injectable()
 export class AnimationInfoService {
