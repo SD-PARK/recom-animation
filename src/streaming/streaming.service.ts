@@ -8,7 +8,7 @@ import { StreamingDto } from './dto/streaming.dto';
 export class StreamingService {
     constructor(
         @InjectRepository(Streaming)
-        private streamingRepository: Repository<Streaming>,
+        private streamingRepository: Repository<Streaming>
     ) {}
 
     /**
@@ -17,7 +17,7 @@ export class StreamingService {
      * @throws BadRequestException - 중복된 스트리밍 사이트가 있을 경우
      * @throws Error - 생성 과정 중 다른 오류가 발생한 경우
      */
-    async create(streaming: StreamingDto) {
+    async create(streaming: StreamingDto): Promise<void> {
         try {
             await this.streamingRepository.insert(streaming);
         } catch(err) {
@@ -56,10 +56,10 @@ export class StreamingService {
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
      * @thrwos Error - 삭제 과정 중 다른 오류가 발생한 경우
      */
-    async delete(id: number) {
-        const streaming = await this.findOne(id);
+    async delete(id: number): Promise<void> {
+        const findStreaming = await this.findOne(id);
         try {
-            await this.streamingRepository.remove(streaming);
+            await this.streamingRepository.remove(findStreaming);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
             throw err;
