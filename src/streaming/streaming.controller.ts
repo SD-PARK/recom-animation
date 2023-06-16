@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { StreamingService } from './streaming.service';
-import { Streaming } from 'src/streaming/streaming.entity';
+import { Streaming } from 'src/entities/streaming.entity';
 import { StreamingDto } from './dto/streaming.dto';
 
 @Controller('streaming')

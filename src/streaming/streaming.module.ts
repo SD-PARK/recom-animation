@@ -1,8 +1,8 @@
 import { Module } from '@nestjs/common';
 import { StreamingController } from './streaming.controller';
 import { StreamingService } from './streaming.service';
-import { Streaming } from 'src/streaming/streaming.entity';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { Streaming } from 'src/entities/streaming.entity';
 
 @Module({
   imports: [
