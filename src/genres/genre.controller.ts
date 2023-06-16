@@ -3,7 +3,7 @@ import { Genre } from 'src/entities/genre.entity';
 import { GenreDto } from './dto/genre.dto';
 import { GenreService } from './genre.service';
 
-@Controller('genres')
+@Controller('genre')
 export class GenreController {
     constructor(private readonly genreService: GenreService) {}
 
