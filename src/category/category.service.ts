@@ -1,15 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { Category } from 'src/db/entities/category.entity';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { EntityNotFoundError } from 'typeorm';
 import { CategoryDto } from './dto/category.dto';
+import { CategoryRepository } from 'src/db/repository/category.repository';
 
 @Injectable()
 export class CategoryService {
-    constructor(
-        @InjectRepository(Category)
-        private categoryRepository: Repository<Category>
-    ) {}
+    constructor(private readonly categoryRepository: CategoryRepository) {}
 
     /**
      * 카테고리 레코드를 생성합니다.
@@ -19,7 +16,7 @@ export class CategoryService {
      */
     async create(category: CategoryDto): Promise<void> {
         try {
-            await this.categoryRepository.insert(category);
+            await this.categoryRepository.createCategory(category);
         } catch(err) {
             if (err.code === 'ER_DUP_ENTRY') { throw new BadRequestException('중복된 값이 존재합니다: ' + category.category) }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -35,7 +32,7 @@ export class CategoryService {
      */
     async findOne(category: string): Promise<Category> {
         try {
-            return await this.categoryRepository.findOneOrFail({ where: { category: category } });
+            return await this.categoryRepository.findCategory({ where: { category: category } });
         } catch(err) {
             if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${category}`); }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -47,7 +44,7 @@ export class CategoryService {
      * @returns 모든 카테고리 레코드의 배열
      */
     async findAll(): Promise<Category[]> {
-        return await this.categoryRepository.find();
+        return await this.categoryRepository.findAllCategory();
     }
 
     /**
@@ -59,7 +56,7 @@ export class CategoryService {
     async delete(category: string): Promise<void> {
         const findCategory = await this.findOne(category);
         try {
-            await this.categoryRepository.remove(findCategory);
+            await this.categoryRepository.deleteCategory(findCategory.id);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
             throw err;
