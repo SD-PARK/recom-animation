@@ -1,10 +1,11 @@
-import { Entity, Column, PrimaryGeneratedColumn } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, Unique } from 'typeorm';
 
-@Entity({ schema: 'recom-animation', name: 'genres' })
-export class Genre {
-    @PrimaryGeneratedColumn({ type: 'int', name: 'id' })
+@Entity('genres')
+@Unique(['genre'])
+export class Genre extends BaseEntity {
+    @PrimaryGeneratedColumn({ type: 'int', comment: '장르 ID' })
     id: number;
 
-    @Column('varchar', { name: 'genre', length: 45 })
+    @Column({ type: 'varchar', length: 45, nullable: false, comment: '장르명' })
     genre: string;
 }
