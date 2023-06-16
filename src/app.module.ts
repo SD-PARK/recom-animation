@@ -5,9 +5,10 @@ import { MysqlModule } from './mysql/mysql.module';
 import { StreamingModule } from './streaming/streaming.module';
 import { ConfigModule } from '@nestjs/config';
 import { TagModule } from './tag/tag.module';
+import { GenresModule } from './genres/genres.module';
 
 @Module({
-  imports: [MysqlModule, StreamingModule, TagModule,
+  imports: [MysqlModule, StreamingModule, TagModule, GenresModule,
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
