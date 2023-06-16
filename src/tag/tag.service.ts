@@ -1,15 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { EntityNotFoundError } from 'typeorm';
 import { TagDto } from './dto/tag.dto';
 import { Tag } from 'src/db/entities/tag.entity';
+import { TagRepository } from 'src/db/repository/tag.repository';
 
 @Injectable()
 export class TagService {
-    constructor(
-        @InjectRepository(Tag)
-        private tagRepository: Repository<Tag>
-    ) {}
+    constructor(private readonly tagRepository: TagRepository) {}
 
     /**
      * 태그 레코드를 생성합니다.
@@ -19,7 +16,7 @@ export class TagService {
      */
     async create(tag: TagDto): Promise<void> {
         try {
-            await this.tagRepository.insert(tag);
+            await this.tagRepository.createTag(tag);
         } catch(err) {
             if (err.code === 'ER_DUP_ENTRY') { throw new BadRequestException('중복된 값이 존재합니다: ' + tag.tag) }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -35,7 +32,7 @@ export class TagService {
      */
     async findOne(tag: string): Promise<Tag> {
         try {
-            return await this.tagRepository.findOneOrFail({ where: { tag: tag }});
+            return await this.tagRepository.findTag({ where: { tag: tag }});
         } catch(err) {
             if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tag}`); }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -47,7 +44,7 @@ export class TagService {
      * @returns 모든 태그 레코드의 배열
      */
     async findAll(): Promise<Tag[]> {
-        return await this.tagRepository.find();
+        return await this.tagRepository.findAllTag();
     }
 
     /**
@@ -59,7 +56,7 @@ export class TagService {
     async delete(tag: string): Promise<void> {
         const findTag = await this.findOne(tag);
         try {
-            await this.tagRepository.remove(findTag);
+            await this.tagRepository.deleteTag(findTag.id);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
             throw err;
