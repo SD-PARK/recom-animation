@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
-import { GenresController } from './genre.controller';
-import { GenresService } from './genre.service';
+import { GenreController } from './genre.controller';
+import { GenreService } from './genre.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Genre } from 'src/entities/genre.entity';
 
@@ -8,7 +8,7 @@ import { Genre } from 'src/entities/genre.entity';
   imports: [
     TypeOrmModule.forFeature([Genre]),
   ],
-  controllers: [GenresController],
-  providers: [GenresService]
+  controllers: [GenreController],
+  providers: [GenreService]
 })
-export class GenresModule {}
+export class GenreModule {}
