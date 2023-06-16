@@ -13,7 +13,7 @@ import { Streaming } from '../entities/streaming.entity';
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_NAME'),
       entities: [Streaming],
-      synchronize: true,
+      // synchronize: true,
     }),
     inject: [ConfigService],
   })],
