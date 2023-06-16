@@ -17,12 +17,6 @@ export class AniamtionInfoDto {
     @Max(2040)
     aired: number;
 
-    // 감독
-    @IsOptional()
-    @IsString()
-    @MaxLength(20)
-    director: string;
-
     // 스튜디오
     @IsString()
     @MaxLength(20)
