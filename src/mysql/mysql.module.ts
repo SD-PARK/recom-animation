@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Streaming } from '../streaming/streaming.entity';
-import { Tag } from 'src/tag/tag.entity';
-import { Genre } from 'src/genres/genre.entity';
+import { Streaming } from 'src/entities/streaming.entity';
+import { Tag } from 'src/entities/tag.entity';
+import { Category } from 'src/entities/category.entity';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
@@ -14,7 +14,7 @@ import { Genre } from 'src/genres/genre.entity';
       username: configService.get('DB_USERNAME'),
       password: configService.get('DB_PASSWORD'),
       database: configService.get('DB_NAME'),
-      entities: [Streaming, Tag, Genre],
+      entities: [Streaming, Tag, Category],
       // synchronize: true,
     }),
     inject: [ConfigService],
