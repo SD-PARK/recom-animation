@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { GenreController } from './genre.controller';
 import { GenreService } from './genre.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { Genre } from 'src/entities/genre.entity';
+import { Genre } from 'src/genres/genre.entity';
 
 @Module({
   imports: [

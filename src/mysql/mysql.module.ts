@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
-import { Streaming } from '../entities/streaming.entity';
-import { Tag } from 'src/entities/tag.entity';
-import { Genre } from 'src/entities/genre.entity';
+import { Streaming } from '../streaming/streaming.entity';
+import { Tag } from 'src/tag/tag.entity';
+import { Genre } from 'src/genres/genre.entity';
 
 @Module({
   imports: [TypeOrmModule.forRootAsync({
