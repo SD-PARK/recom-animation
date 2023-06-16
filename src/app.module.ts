@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MysqlModule } from './mysql/mysql.module';
+import { DBModule } from './db/db.module';
 import { StreamingModule } from './streaming/streaming.module';
 import { CategoryModule } from './category/category.module';
 import { TagModule } from './tag/tag.module';
@@ -10,7 +10,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TypeOrmExModule } from './typeorm_ex/typeorm_ex.module';
 
 @Module({
-  imports: [MysqlModule, StreamingModule, CategoryModule, TagModule, AnimationInfoModule,
+  imports: [DBModule, StreamingModule, CategoryModule, TagModule, AnimationInfoModule,
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,

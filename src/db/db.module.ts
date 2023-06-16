@@ -20,4 +20,4 @@ import { Category } from 'src/entities/category.entity';
     inject: [ConfigService],
   })],
 })
-export class MysqlModule {}
+export class DBModule {}
