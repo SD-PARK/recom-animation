@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { StreamingService } from './streaming.service';
-import { Streaming } from 'src/entities/streaming.entity';
+import { Streaming } from 'src/streaming/streaming.entity';
 import { StreamingDto } from './dto/streaming.dto';
 
 @Controller('streaming')
@@ -12,9 +12,9 @@ export class StreamingController {
         return await this.streamingService.findAll();
     }
 
-    @Get(':id')
-    async findOne(@Param('id') id: number): Promise<Streaming> {
-        return await this.streamingService.findOne(id);
+    @Get(':streaming')
+    async findOne(@Param('streaming') streaming: string): Promise<Streaming> {
+        return await this.streamingService.findOne(streaming);
     }
 
     @Post()
@@ -23,9 +23,9 @@ export class StreamingController {
         return { message: 'Success' };
     }
 
-    @Delete(':id')
-    async delete(@Param('id') id: number): Promise<{message: string}> {
-        await this.streamingService.delete(id);
+    @Delete(':streaming')
+    async delete(@Param('streaming') streaming: string): Promise<{message: string}> {
+        await this.streamingService.delete(streaming);
         return { message: 'Success' };
     }
 }

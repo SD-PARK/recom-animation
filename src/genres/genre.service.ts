@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { GenreDto } from './dto/genre.dto';
-import { Genre } from 'src/entities/genre.entity';
+import { Genre } from 'src/genres/genre.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { EntityNotFoundError, Repository } from 'typeorm';
 
@@ -27,17 +27,17 @@ export class GenreService {
     }
     
     /**
-     * ID를 통해 장르 레코드를 검색합니다.
-     * @param id - 검색할 장르 레코드의 ID
+     * 장르명을 통해 장르 레코드를 검색합니다.
+     * @param genre - 검색할 장르 레코드의 장르명
      * @returns 검색된 장르 레코드
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
      * @throws Error - 검색 과정 중 다른 오류가 발생한 경우
      */
-    async findOne(id: number): Promise<Genre> {
+    async findOne(genre: string): Promise<Genre> {
         try {
-            return await this.genreRepository.findOneOrFail({ where: { id: id } });
+            return await this.genreRepository.findOneOrFail({ where: { genre: genre } });
         } catch(err) {
-            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${id}`); }
+            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${genre}`); }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
         }
     }
@@ -51,13 +51,13 @@ export class GenreService {
     }
 
     /**
-     * ID를 통해 장르 레코드를 삭제합니다.
-     * @param id - 삭제할 장르 레코드의 ID
+     * 장르명을 통해 장르 레코드를 삭제합니다.
+     * @param genre - 삭제할 장르 레코드의 장르명
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
      * @thrwos Error - 삭제 과정 중 다른 오류가 발생한 경우
      */
-    async delete(id: number): Promise<void> {
-        const findGenre = await this.findOne(id);
+    async delete(genre: string): Promise<void> {
+        const findGenre = await this.findOne(genre);
         try {
             await this.genreRepository.remove(findGenre);
         } catch(err) {

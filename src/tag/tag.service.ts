@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Tag } from 'src/entities/tag.entity';
+import { Tag } from 'src/tag/tag.entity';
 import { EntityNotFoundError, Repository } from 'typeorm';
 import { TagDto } from './dto/tag.dto';
 
@@ -27,17 +27,17 @@ export class TagService {
     }
 
     /**
-     * ID를 통해 태그 레코드를 검색합니다.
-     * @param id - 검색할 태그 레코드의 ID
+     * 태그명을 통해 태그 레코드를 검색합니다.
+     * @param id - 검색할 태그 레코드의 태그명
      * @returns 검색된 태그 레코드
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
      * @throws Error - 검색 과정 중 다른 오류가 발생한 경우
      */
-    async findOne(id: number): Promise<Tag> {
+    async findOne(tag: string): Promise<Tag> {
         try {
-            return await this.tagRepository.findOneOrFail({ where: { id: id }});
+            return await this.tagRepository.findOneOrFail({ where: { tag: tag }});
         } catch(err) {
-            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${id}`); }
+            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tag}`); }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
         }
     }
@@ -51,13 +51,13 @@ export class TagService {
     }
 
     /**
-     * ID를 통해 태그 레코드를 삭제합니다.
-     * @param id - 삭제할 태그 레코드의 ID
+     * 태그명을 통해 태그 레코드를 삭제합니다.
+     * @param tag - 삭제할 태그 레코드의 태그명
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
      * @thrwos Error - 삭제 과정 중 다른 오류가 발생한 경우
      */
-    async delete(id: number): Promise<void> {
-        const findTag = await this.findOne(id);
+    async delete(tag: string): Promise<void> {
+        const findTag = await this.findOne(tag);
         try {
             await this.tagRepository.remove(findTag);
         } catch(err) {

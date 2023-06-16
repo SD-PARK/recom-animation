@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { TagDto } from './dto/tag.dto';
-import { Tag } from 'src/entities/tag.entity';
+import { Tag } from 'src/tag/tag.entity';
 import { TagService } from './tag.service';
 
 @Controller('tag')
@@ -12,9 +12,9 @@ export class TagController {
         return await this.tagService.findAll();
     }
 
-    @Get(':id')
-    async findOne(@Param('id') id: number): Promise<Tag> {
-        return await this.tagService.findOne(id);
+    @Get(':tag')
+    async findOne(@Param('tag') tag: string): Promise<Tag> {
+        return await this.tagService.findOne(tag);
     }
 
     @Post()
@@ -23,9 +23,9 @@ export class TagController {
         return { message: 'Success' };
     }
 
-    @Delete(':id')
-    async delete(@Param('id') id: number): Promise<{message: string}> {
-        await this.tagService.delete(id);
+    @Delete(':tag')
+    async delete(@Param('tag') tag: string): Promise<{message: string}> {
+        await this.tagService.delete(tag);
         return { message: 'Success' };
     }
 }

@@ -1,5 +1,5 @@
 import { Controller, Get, Post, Delete, Param, Body } from '@nestjs/common';
-import { Genre } from 'src/entities/genre.entity';
+import { Genre } from 'src/genres/genre.entity';
 import { GenreDto } from './dto/genre.dto';
 import { GenreService } from './genre.service';
 
@@ -12,9 +12,9 @@ export class GenreController {
         return await this.genreService.findAll();
     }
 
-    @Get(':id')
-    async findOne(@Param('id') id: number): Promise<Genre> {
-        return await this.genreService.findOne(id);
+    @Get(':genre')
+    async findOne(@Param('genre') genre: string): Promise<Genre> {
+        return await this.genreService.findOne(genre);
     }
 
     @Post()
@@ -23,9 +23,9 @@ export class GenreController {
         return { message: 'Success' };
     }
 
-    @Delete(':id')
-    async delete(@Param('id') id: number): Promise<{message: string}> {
-        await this.genreService.delete(id);
+    @Delete(':genre')
+    async delete(@Param('genre') genre: string): Promise<{message: string}> {
+        await this.genreService.delete(genre);
         return { message: 'Success' };
     }
 }
