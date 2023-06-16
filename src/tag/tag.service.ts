@@ -59,7 +59,7 @@ export class TagService {
     async delete(id: number): Promise<void> {
         const findTag = await this.findOne(id);
         try {
-            await this.tagRepository.delete(findTag);
+            await this.tagRepository.remove(findTag);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
             throw err;
