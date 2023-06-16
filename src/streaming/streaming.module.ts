@@ -1,12 +1,12 @@
 import { Module } from '@nestjs/common';
 import { StreamingController } from './streaming.controller';
 import { StreamingService } from './streaming.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Streaming } from 'src/db/entities/streaming.entity';
+import { StreamingRepository } from 'src/db/repository/streaming.repository';
+import { TypeOrmExModule } from 'src/typeorm_ex/typeorm_ex.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Streaming]),
+    TypeOrmExModule.forCustomRepository([StreamingRepository]),
   ],
   controllers: [StreamingController],
   providers: [StreamingService]

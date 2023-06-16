@@ -1,15 +1,12 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
-import { EntityNotFoundError, Repository } from 'typeorm';
+import { EntityNotFoundError } from 'typeorm';
 import { Streaming } from 'src/db/entities/streaming.entity';
 import { StreamingDto } from './dto/streaming.dto';
+import { StreamingRepository } from 'src/db/repository/streaming.repository';
 
 @Injectable()
 export class StreamingService {
-    constructor(
-        @InjectRepository(Streaming)
-        private streamingRepository: Repository<Streaming>
-    ) {}
+    constructor(private readonly streamingRepository: StreamingRepository) {}
 
     /**
      * 스트리밍 레코드를 생성합니다.
@@ -19,7 +16,7 @@ export class StreamingService {
      */
     async create(streaming: StreamingDto): Promise<void> {
         try {
-            await this.streamingRepository.insert(streaming);
+            await this.streamingRepository.createStreaming(streaming);
         } catch(err) {
             if (err.code === 'ER_DUP_ENTRY') { throw new BadRequestException('중복된 값이 존재합니다: ' + streaming.streaming) }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -35,7 +32,7 @@ export class StreamingService {
      */
     async findOne(streaming: string): Promise<Streaming> {
         try {
-            return await this.streamingRepository.findOneOrFail({ where: { streaming: streaming } });
+            return await this.streamingRepository.findStreaming({ where: { streaming: streaming } });
         } catch(err) {
             if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${streaming}`); }
             else { console.error('오류가 발생했습니다:', err.message); throw err; }
@@ -47,7 +44,7 @@ export class StreamingService {
      * @returns 모든 스트리밍 레코드의 배열
      */
     async findAll(): Promise<Streaming[]> {
-        return await this.streamingRepository.find();
+        return await this.streamingRepository.findAllStreaming();
     }
 
     /**
@@ -59,7 +56,7 @@ export class StreamingService {
     async delete(streaming: string): Promise<void> {
         const findStreaming = await this.findOne(streaming);
         try {
-            await this.streamingRepository.remove(findStreaming);
+            await this.streamingRepository.deleteStreaming(findStreaming.id);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
             throw err;
