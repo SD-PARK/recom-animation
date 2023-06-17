@@ -1,12 +1,15 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { EntityNotFoundError } from 'typeorm';
 import { TagDto } from './dto/tag.dto';
 import { Tag } from 'src/db/entities/tag.entity';
 import { TagRepository } from 'src/db/repository/tag.repository';
+import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository copy 2';
 
 @Injectable()
 export class TagService {
-    constructor(private readonly tagRepository: TagRepository) {}
+    constructor(
+        private readonly tagRepository: TagRepository,
+        private readonly animationTagRepository: AnimationTagRepository,
+    ) {}
 
     /**
      * 태그 레코드를 생성합니다.
@@ -32,10 +35,11 @@ export class TagService {
      */
     async findOne(tag: string): Promise<Tag> {
         try {
-            return await this.tagRepository.findTag({ where: { tag: tag }});
+            const result: Tag = await this.tagRepository.findTag(tag);
+            if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tag}`); }
+            return result;
         } catch(err) {
-            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tag}`); }
-            else { console.error('오류가 발생했습니다:', err.message); throw err; }
+            console.error('오류가 발생했습니다:', err.message); throw err;
         }
     }
 
@@ -54,8 +58,9 @@ export class TagService {
      * @thrwos Error - 삭제 과정 중 다른 오류가 발생한 경우
      */
     async delete(tag: string): Promise<void> {
-        const findTag = await this.findOne(tag);
+        const findTag: Tag = await this.findOne(tag);
         try {
+            await this.animationTagRepository.deleteBytagId(findTag.id);
             await this.tagRepository.deleteTag(findTag.id);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
