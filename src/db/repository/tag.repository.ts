@@ -10,8 +10,8 @@ export class TagRepository extends Repository<Tag> {
         await this.save(tag);
     }
 
-    async findTag(tagData: FindOneOptions<Tag>): Promise<Tag> {
-        return await this.findOne(tagData);
+    async findTag(tagName: string): Promise<Tag> {
+        return await this.findOne({ where: { tag: tagName } });
     }
 
     async findAllTag(): Promise<Tag[]> {

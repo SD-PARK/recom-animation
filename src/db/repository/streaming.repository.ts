@@ -10,8 +10,8 @@ export class StreamingRepository extends Repository<Streaming> {
         await this.save(streaming);
     }
 
-    async findStreaming(streamingData: FindOneOptions<Streaming>): Promise<Streaming> {
-        return await this.findOne(streamingData);
+    async findStreaming(streamingName: string): Promise<Streaming> {
+        return await this.findOne({ where: { streaming: streamingName } });
     }
 
     async findAllStreaming(): Promise<Streaming[]> {
