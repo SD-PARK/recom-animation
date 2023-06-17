@@ -1,12 +1,15 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { Category } from 'src/db/entities/category.entity';
-import { EntityNotFoundError } from 'typeorm';
 import { CategoryDto } from './dto/category.dto';
 import { CategoryRepository } from 'src/db/repository/category.repository';
+import { AnimationCategoryRepository } from 'src/db/repository/animation-category.repository';
 
 @Injectable()
 export class CategoryService {
-    constructor(private readonly categoryRepository: CategoryRepository) {}
+    constructor(
+        private readonly categoryRepository: CategoryRepository,
+        private readonly animationCategoryRepository: AnimationCategoryRepository,
+    ) {}
 
     /**
      * 카테고리 레코드를 생성합니다.
@@ -32,10 +35,11 @@ export class CategoryService {
      */
     async findOne(category: string): Promise<Category> {
         try {
-            return await this.categoryRepository.findCategory({ where: { category: category } });
+            const result: Category = await this.categoryRepository.findCategory(category);
+            if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${category}`); }
+            return result;
         } catch(err) {
-            if (err instanceof EntityNotFoundError) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${category}`); }
-            else { console.error('오류가 발생했습니다:', err.message); throw err; }
+            console.error('오류가 발생했습니다:', err.message); throw err;
         }
     }
 
@@ -54,8 +58,9 @@ export class CategoryService {
      * @thrwos Error - 삭제 과정 중 다른 오류가 발생한 경우
      */
     async delete(category: string): Promise<void> {
-        const findCategory = await this.findOne(category);
+        const findCategory: Category = await this.findOne(category);
         try {
+            await this.animationCategoryRepository.deleteByCategoryId(findCategory.id);
             await this.categoryRepository.deleteCategory(findCategory.id);
         } catch(err) {
             console.error('오류가 발생했습니다:', err.message);
