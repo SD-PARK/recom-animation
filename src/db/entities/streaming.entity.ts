@@ -1,4 +1,5 @@
-import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, Unique } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, BaseEntity, Unique, OneToMany } from 'typeorm';
+import { AnimationStreaming } from './animation-streaming.entity';
 
 @Entity('streamings')
 @Unique(['streaming'])
@@ -8,4 +9,7 @@ export class Streaming extends BaseEntity {
 
     @Column({ type: 'varchar', length: 45, nullable: false, comment: '사이트명' })
     streaming: string;
+
+    @OneToMany(() => AnimationStreaming, streaming => streaming.streaming)
+    animations: AnimationStreaming[];
 }

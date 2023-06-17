@@ -1,10 +1,20 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, JoinColumn, ManyToOne, PrimaryColumn } from "typeorm";
+import { AnimationInfo } from "./animation-info.entity";
+import { Tag } from "./tag.entity";
 
-@Entity('animations_tags')
+@Entity('animation_tags')
 export class AnimationTag {
-    @Column({ name: 'animation_id', type: 'int', nullable: false })
-    animationId: number;
+    @PrimaryColumn()
+    animation_id: number;
+    
+    @PrimaryColumn()
+    tag_id: number;
 
-    @Column({ name: 'tag_id', type: 'int', nullable: false })
-    tagId: number;
+    @ManyToOne(() => AnimationInfo, ani => ani.tags)
+    @JoinColumn({ name: 'animation_id' })
+    animation: AnimationInfo;
+
+    @ManyToOne(() => Tag, tag => tag.animations)
+    @JoinColumn({ name: 'tag_id' })
+    tag: Tag;
 }

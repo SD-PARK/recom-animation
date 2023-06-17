@@ -1,5 +1,7 @@
-import { BaseEntity, Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AnimationTag } from "./animation-tag.entity";
+import { AnimationCategory } from "./animation-category.entity";
+import { AnimationStreaming } from "./animation-streaming.entity";
 
 @Entity('animation_infos')
 export class AnimationInfo extends BaseEntity {
@@ -15,9 +17,6 @@ export class AnimationInfo extends BaseEntity {
     @Column({ type: 'year', nullable: false, comment: '방영년도' })
     aired: number;
 
-    @Column({ type: 'varchar', length: 20, nullable: true, comment: '감독' })
-    director: string;
-
     @Column({ type: 'varchar', length: 20, nullable: false, comment: '스튜디오' })
     studio: string;
 
@@ -26,6 +25,13 @@ export class AnimationInfo extends BaseEntity {
 
     @Column({ type: 'int', nullable: false, comment: '심의 등급' })
     rated: number;
-    
-    // @OneToMany(() => AnimationTag, animationTag => animationTag.)
+
+    @OneToMany(() => AnimationCategory, category => category.animation)
+    categories: AnimationCategory[];
+
+    @OneToMany(() => AnimationTag, tag => tag.animation)
+    tags: AnimationTag[];
+
+    @OneToMany(() => AnimationStreaming, streaming => streaming.animation)
+    streamings: AnimationStreaming[];
 }
