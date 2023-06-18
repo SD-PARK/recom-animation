@@ -57,7 +57,6 @@ export class StreamingService {
      * @param streamingData - 변경할 스트리밍 사이트 데이터
      */
     async update(streamingId: number, streamingData: StreamingDto): Promise<void> {
-        await this.findOne(streamingData.streaming);
         try {
             const result = await this.streamingRepository.findStreamingById(streamingId);
             if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${streamingId}`); }
