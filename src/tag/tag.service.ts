@@ -2,7 +2,7 @@ import { BadRequestException, Injectable, NotFoundException } from '@nestjs/comm
 import { TagDto } from './dto/tag.dto';
 import { Tag } from 'src/db/entities/tag.entity';
 import { TagRepository } from 'src/db/repository/tag.repository';
-import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository copy 2';
+import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository';
 
 @Injectable()
 export class TagService {

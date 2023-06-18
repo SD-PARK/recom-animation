@@ -5,7 +5,7 @@ import { CategoryRepository } from 'src/db/repository/category.repository';
 import { TagRepository } from 'src/db/repository/tag.repository';
 import { StreamingRepository } from 'src/db/repository/streaming.repository';
 import { AnimationCategoryRepository } from 'src/db/repository/animation-category.repository';
-import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository copy 2';
+import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository';
 import { AnimationStreamingRepository } from 'src/db/repository/animation-streaming.repository copy';
 import { AnimationInfo } from 'src/db/entities/animation-info.entity';
 import { UpdateAniamtionInfoDto } from './dto/update-animation-info.dto';
