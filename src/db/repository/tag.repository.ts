@@ -14,8 +14,16 @@ export class TagRepository extends Repository<Tag> {
         return await this.findOne({ where: { tag: tagName } });
     }
 
+    async findTagById(tagId: number): Promise<Tag> {
+        return await this.findOne({ where: { id: tagId } });
+    }
+
     async findAllTag(): Promise<Tag[]> {
         return await this.find();
+    }
+
+    async updateTag(tagId: number, tagData: TagDto): Promise<void> {
+        await this.update(tagId, tagData);
     }
 
     async deleteTag(tagId: number): Promise<void> {

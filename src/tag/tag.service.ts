@@ -13,7 +13,7 @@ export class TagService {
 
     /**
      * 태그 레코드를 생성합니다.
-     * @param streaming - 생성할 태그
+     * @param tag - 생성할 태그
      * @throws BadRequestException - 중복된 태그가 있을 경우
      * @throws Error - 생성 과정 중 다른 오류가 발생한 경우
      */
@@ -39,7 +39,8 @@ export class TagService {
             if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tag}`); }
             return result;
         } catch(err) {
-            console.error('오류가 발생했습니다:', err.message); throw err;
+            console.error('오류가 발생했습니다:', err.message);
+            throw err;
         }
     }
 
@@ -49,6 +50,22 @@ export class TagService {
      */
     async findAll(): Promise<Tag[]> {
         return await this.tagRepository.findAllTag();
+    }
+
+    /**
+     * 태그명을 변경합니다.
+     * @param tagId - 변경할 태그의 ID
+     * @param tagData - 변경할 태그 데이터
+     */
+    async update(tagId: number, tagData: TagDto): Promise<void> {
+        try {
+            const result = await this.tagRepository.findTagById(tagId);
+            if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${tagId}`); }
+            await this.tagRepository.updateTag(tagId, tagData);
+        } catch(err) {
+            console.error('오류가 발생했습니다:', err.message);
+            throw err;
+        }
     }
 
     /**
