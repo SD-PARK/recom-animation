@@ -1,33 +1,21 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { TagService } from './tag.service';
-import { TypeOrmModule } from '@nestjs/typeorm';
-import { Tag } from 'src/db/entities/tag.entity';
-import { ConfigService } from '@nestjs/config';
+import { TagRepository } from 'src/db/repository/tag.repository';
+import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository';
 
 describe('TagService', () => {
   let service: TagService;
+  let tagRepository: TagRepository;
+  let animationTagRepository: AnimationTagRepository;
 
   beforeAll(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      imports: [
-        TypeOrmModule.forRootAsync({
-          useFactory: async (configService: ConfigService) => ({
-            type: 'mysql',
-            host: configService.get('DB_HOST'),
-            port: configService.get('DB_PORT'),
-            username: configService.get('DB_USERNAME'),
-            password: configService.get('DB_PASSWORD'),
-            database: configService.get('DB_NAME'),
-            entities: [Tag],
-            // synchronize: true,
-          }),
-          inject: [ConfigService],
-        }),
-        TypeOrmModule.forFeature([Tag])],
-      providers: [TagService],
+      providers: [TagService, TagRepository, AnimationTagRepository],
     }).compile();
 
     service = module.get<TagService>(TagService);
+    tagRepository = module.get<TagRepository>(TagRepository);
+    animationTagRepository = module.get<AnimationTagRepository>(AnimationTagRepository);
   });
 
   it('should be defined', () => {
@@ -35,7 +23,14 @@ describe('TagService', () => {
   });
 
   describe('create', () => {
-    
+    // it('태그가 생성되는가?', async () => {
+    //   const beforeTagLength: number = (await tagRepository.findAllTag()).length;
+    //   await service.create({
+    //     tag: 'TestTag'
+    //   });
+    //   const afterTagLength: number = (await tagRepository.findAllTag()).length;
+    //   expect(afterTagLength).toBeGreaterThan(beforeTagLength);
+    // });
   });
 
   describe('findOne', () => {
@@ -43,6 +38,10 @@ describe('TagService', () => {
   });
 
   describe('findAll', () => {
+
+  });
+
+  describe('update', () => {
 
   });
 
