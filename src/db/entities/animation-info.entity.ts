@@ -1,8 +1,9 @@
-import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique } from "typeorm";
 import { AnimationTag } from "./animation-tag.entity";
 import { AnimationStreaming } from "./animation-streaming.entity";
 
 @Entity('animation_infos')
+@Unique(['title'])
 export class AnimationInfo extends BaseEntity {
     @PrimaryGeneratedColumn({ type: 'int', comment: '애니메이션 ID' })
     id: number;

@@ -34,8 +34,8 @@ export class AnimationInfoService {
         try {
             animationId = await this.animationInfoRepository.createAnimation(animationInfo);
         } catch(err) {
-            console.error('오류가 발생했습니다:', err.message);
-            throw err;
+            if (err.code === 'ER_DUP_ENTRY') { throw new BadRequestException('중복된 값이 존재합니다: ' + animationInfo.title); }
+            else { console.error('오류가 발생했습니다:', err.message); throw err; }
         }
         
         // 카테고리, 태그, 스트리밍 사이트 입력
