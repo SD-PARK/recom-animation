@@ -1,6 +1,6 @@
 import { CustomRepository } from "src/typeorm_ex/typeorm-ex.decorator";
 import { Category } from "../entities/category.entity";
-import { FindOneOptions, Repository } from "typeorm";
+import { Repository } from "typeorm";
 import { CategoryDto } from "src/category/dto/category.dto";
 
 @CustomRepository(Category)
