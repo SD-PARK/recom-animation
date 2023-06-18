@@ -52,6 +52,23 @@ export class CategoryService {
     }
 
     /**
+     * 카테고리명을 변경합니다.
+     * @param categoryId - 변경할 카테고리의 ID
+     * @param categoryData - 변경할 카테고리 데이터
+     */
+    async update(categoryId: number, categoryData: CategoryDto): Promise<void> {
+        await this.findOne(categoryData.category);
+        try {
+            const result = await this.categoryRepository.findCategoryById(categoryId);
+            if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${categoryId}`); }
+            await this.categoryRepository.updateCategory(categoryId, categoryData);
+        } catch(err) {
+            console.error('오류가 발생했습니다:', err.message);
+            throw err;
+        }
+    }
+
+    /**
      * 카테고리명을 통해 카테고리 레코드를 삭제합니다.
      * @param category - 삭제할 카테고리 레코드의 카테고리명
      * @throws NotFoundException - 일치하는 레코드가 없는 경우

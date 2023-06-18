@@ -15,8 +15,16 @@ export class CategoryRepository extends Repository<Category> {
         // return await this.findOne({ where: { category: categoryName }, relations: ['animations'] });
     }
 
+    async findCategoryById(categoryId: number): Promise<Category> {
+        return await this.findOne({ where: { id: categoryId } });
+    }
+
     async findAllCategory(): Promise<Category[]> {
         return await this.find();
+    }
+
+    async updateCategory(categoryId: number, categoryData: CategoryDto): Promise<void> {
+        await this.update(categoryId, categoryData);
     }
 
     async deleteCategory(categoryId: number): Promise<void> {
