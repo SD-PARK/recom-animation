@@ -118,7 +118,7 @@ export class AnimationInfoService {
      * @throws 등록되지 않은 태그, 스트리밍 사이트가 있을 경우 'BadRequestException'이 발생합니다.
      */
     private async tagNameValidation(tags: string[], streamings: string[]): Promise<{ tagIDs: number[], streamingIDs: number[] }> {
-        let categoryIDs: number[] = [], tagIDs: number[] = [], streamingIDs: number[] = [];
+        let tagIDs: number[] = [], streamingIDs: number[] = [];
         try {
             if (tags) {
                 const allTag = await this.tagRepository.findAllTag();
@@ -161,9 +161,10 @@ function getMatchingIds(array: string[], allArray: ObjectService[]): number[] {
   
     for (const service of allArray) {
       const { id, streaming, tag } = service;
-      const lowerCasedStreaming = (streaming || tag || "").toLowerCase();
+      const upperCasedArray = array.map(value => value.toUpperCase());
+      const upperCasedTag = (streaming || tag).toUpperCase();
 
-      if (array.includes(lowerCasedStreaming)) {
+      if (upperCasedArray.includes(upperCasedTag)) {
         matchingIds.push(id);
       }
     }
