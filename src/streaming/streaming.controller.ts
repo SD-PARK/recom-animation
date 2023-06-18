@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put } from '@nestjs/common';
 import { StreamingService } from './streaming.service';
 import { Streaming } from 'src/db/entities/streaming.entity';
 import { StreamingDto } from './dto/streaming.dto';
@@ -20,6 +20,12 @@ export class StreamingController {
     @Post()
     async create(@Body() streaming: StreamingDto): Promise<{message: string}> {
         await this.streamingService.create(streaming);
+        return { message: 'Success' };
+    }
+
+    @Put(':id')
+    async update(@Param('id') id: number, @Body() streamingData: StreamingDto): Promise<{message: string}> {
+        await this.streamingService.update(id, streamingData);
         return { message: 'Success' };
     }
 

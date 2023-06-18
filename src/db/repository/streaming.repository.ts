@@ -14,8 +14,16 @@ export class StreamingRepository extends Repository<Streaming> {
         return await this.findOne({ where: { streaming: streamingName } });
     }
 
+    async findStreamingById(streamingId: number): Promise<Streaming> {
+        return await this.findOne({ where: { id: streamingId } });
+    }
+
     async findAllStreaming(): Promise<Streaming[]> {
         return await this.find();
+    }
+
+    async updateStreaming(streamingId: number, streamingData: StreamingDto): Promise<void> {
+        await this.update(streamingId, streamingData);
     }
 
     async deleteStreaming(streamingId: number): Promise<void> {

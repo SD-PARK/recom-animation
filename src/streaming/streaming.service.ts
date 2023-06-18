@@ -52,6 +52,23 @@ export class StreamingService {
     }
 
     /**
+     * 스트리밍 사이트명을 변경합니다.
+     * @param streamingId - 변경할 스트리밍 사이트의 ID
+     * @param streamingData - 변경할 스트리밍 사이트 데이터
+     */
+    async update(streamingId: number, streamingData: StreamingDto): Promise<void> {
+        await this.findOne(streamingData.streaming);
+        try {
+            const result = await this.streamingRepository.findStreamingById(streamingId);
+            if (!result) { throw new NotFoundException(`일치하는 데이터를 찾을 수 없습니다: ${streamingId}`); }
+            await this.streamingRepository.updateStreaming(streamingId, streamingData);
+        } catch(err) {
+            console.error('오류가 발생했습니다:', err.message);
+            throw err;
+        }
+    }
+
+    /**
      * 스트리밍 사이트명을 통해 스트리밍 레코드를 삭제합니다.
      * @param streaming - 삭제할 스트리밍 레코드의 사이트 명
      * @throws NotFoundException - 일치하는 레코드가 없는 경우
