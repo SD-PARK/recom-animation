@@ -33,11 +33,6 @@ export class CreateAnimationInfoDto {
     @Max(19)
     rated: number;
 
-    // 카테고리
-    @IsOptional()
-    @IsString({ each: true })
-    categories?: string[];
-
     // 태그
     @IsOptional()
     @IsString({ each: true })

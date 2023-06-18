@@ -1,6 +1,5 @@
 import { BaseEntity, Column, Entity, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { AnimationTag } from "./animation-tag.entity";
-import { AnimationCategory } from "./animation-category.entity";
 import { AnimationStreaming } from "./animation-streaming.entity";
 
 @Entity('animation_infos')
@@ -25,9 +24,6 @@ export class AnimationInfo extends BaseEntity {
 
     @Column({ type: 'int', nullable: false, comment: '심의 등급' })
     rated: number;
-
-    @OneToMany(() => AnimationCategory, category => category.animation)
-    categories: AnimationCategory[];
 
     @OneToMany(() => AnimationTag, tag => tag.animation)
     tags: AnimationTag[];

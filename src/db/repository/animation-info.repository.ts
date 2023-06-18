@@ -14,7 +14,6 @@ export class AnimationInfoRepository extends Repository<AnimationInfo> {
      */
     async createAnimation(animationData: CreateAnimationInfoDto): Promise<number> {
         const {
-            categories,
             tags,
             streamings,
             ...animationInfo
@@ -25,16 +24,15 @@ export class AnimationInfoRepository extends Repository<AnimationInfo> {
     }
 
     async findAnimation(animationId: number): Promise<AnimationInfo> {
-        return await this.findOne({ where: { id: animationId }, relations: ["categories.category", "tags.tag", "streamings.streaming"]});
+        return await this.findOne({ where: { id: animationId }, relations: ["tags.tag", "streamings.streaming"]});
     }
 
     async findAllAnimation(): Promise<AnimationInfo[]> {
-        return await this.find({ relations: ["categories.category", "tags.tag", "streamings.streaming"] });
+        return await this.find({ relations: ["tags.tag", "streamings.streaming"] });
     }
 
     async updateAnimation(animationId: number, animationData: UpdateAniamtionInfoDto): Promise<void> {
         const {
-            categories,
             tags,
             streamings,
             ...animationInfo

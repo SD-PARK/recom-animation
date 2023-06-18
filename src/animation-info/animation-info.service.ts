@@ -1,10 +1,8 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { AnimationInfoRepository } from 'src/db/repository/animation-info.repository';
 import { CreateAnimationInfoDto } from './dto/create-animation-info.dto';
-import { CategoryRepository } from 'src/db/repository/category.repository';
 import { TagRepository } from 'src/db/repository/tag.repository';
 import { StreamingRepository } from 'src/db/repository/streaming.repository';
-import { AnimationCategoryRepository } from 'src/db/repository/animation-category.repository';
 import { AnimationTagRepository } from 'src/db/repository/animation-tag.repository';
 import { AnimationStreamingRepository } from 'src/db/repository/animation-streaming.repository copy';
 import { AnimationInfo } from 'src/db/entities/animation-info.entity';
@@ -14,10 +12,8 @@ import { UpdateAniamtionInfoDto } from './dto/update-animation-info.dto';
 export class AnimationInfoService {
     constructor(
         private readonly animationInfoRepository: AnimationInfoRepository,
-        private readonly categoryRepository: CategoryRepository,
         private readonly tagRepository: TagRepository,
         private readonly streamingRepository: StreamingRepository,
-        private readonly animationCategoryRepository: AnimationCategoryRepository,
         private readonly animationTagRepository: AnimationTagRepository,
         private readonly animationStreamingRepository: AnimationStreamingRepository,
     ) {}
@@ -26,14 +22,13 @@ export class AnimationInfoService {
         let animationId: number;
         let categoryIDs: number[] = [], tagIDs: number[] = [], streamingIDs: number[] = [];
         const {
-            categories,
             tags,
             streamings,
             ...animationInfo
         } = animationData;
 
         // 카테고리, 태그, 스트리밍 사이트 유효성 검사 및 ID 검색
-        ({ categoryIDs, tagIDs, streamingIDs } = await this.tagNameValidation(categories, tags, streamings));
+        ({ tagIDs, streamingIDs } = await this.tagNameValidation(tags, streamings));
 
         // 애니메이션 레코드 생성
         try {
@@ -44,7 +39,6 @@ export class AnimationInfoService {
         }
         
         // 카테고리, 태그, 스트리밍 사이트 입력
-        for(const categoryId of categoryIDs) { await this.animationCategoryRepository.createRelation(animationId, categoryId); }
         for(const tagId of tagIDs) { await this.animationTagRepository.createRelation(animationId, tagId); }
         for(const streamingId of streamingIDs) { await this.animationStreamingRepository.createRelation(animationId, streamingId); }
     }
@@ -67,20 +61,18 @@ export class AnimationInfoService {
     async updateAnimationInfo(animationId: number, updateData: UpdateAniamtionInfoDto): Promise<void> {
         await this.findOne(animationId);
 
-        let categoryIDs: number[] = [], tagIDs: number[] = [], streamingIDs: number[] = [];
+        let tagIDs: number[] = [], streamingIDs: number[] = [];
         const {
-            categories,
             tags,
             streamings,
             ...updateAnimationInfo
         } = updateData;
 
-        // 카테고리, 태그, 스트리밍 사이트 유효성 검사 및 ID 검색
-        ({ categoryIDs, tagIDs, streamingIDs } = await this.tagNameValidation(categories, tags, streamings));
+        // 태그, 스트리밍 사이트 유효성 검사 및 ID 검색
+        ({ tagIDs, streamingIDs } = await this.tagNameValidation(tags, streamings));
 
         // 애니메이션 레코드 업데이트
         if (Object.keys(updateAnimationInfo).length > 0) {
-            console.log(11111);
             try {
                 await this.animationInfoRepository.updateAnimation(animationId, updateData);
             } catch(err) {
@@ -89,13 +81,7 @@ export class AnimationInfoService {
             }
         }
         
-        // 카테고리, 태그, 스트리밍 사이트 입력
-        if (categories) {
-            await this.animationCategoryRepository.deleteByAnimationId(animationId);
-            for(const categoryId of categoryIDs) {
-                await this.animationCategoryRepository.createRelation(animationId, categoryId);
-            }
-        }
+        // 태그, 스트리밍 사이트 입력
         if (tags) {
             await this.animationTagRepository.deleteByAnimationId(animationId);
             for(const tagId of tagIDs) {
@@ -113,7 +99,6 @@ export class AnimationInfoService {
     async delete(animationId: number): Promise<void> {
         await this.findOne(animationId);
         try {
-            await this.animationCategoryRepository.deleteByAnimationId(animationId);
             await this.animationTagRepository.deleteByAnimationId(animationId);
             await this.animationStreamingRepository.deleteByAnimationId(animationId);
 
@@ -125,23 +110,16 @@ export class AnimationInfoService {
     }
 
     /**
-     * 카테고리, 태그, 스트리밍 배열에 대해 유효성 검사를 진행 후, 각 배열과 매핑된 ID 배열을 반환합니다.
+     * 태그, 스트리밍 배열에 대해 유효성 검사를 진행 후, 각 배열과 매핑된 ID 배열을 반환합니다.
      * @param categories - 유효성 검사를 진행할 카테고리 배열
      * @param tags - 유효성 검사를 진행할 태그 배열
      * @param streamings - 유효성 검사를 진행할 스트리밍 배열
-     * @returns 카테고리, 태그, 스트리밍의 ID 배열입니다.
-     * @throws 등록되지 않은 카테고리, 태그, 스트리밍 사이트가 있을 경우 'BadRequestException'이 발생합니다.
+     * @returns 태그, 스트리밍의 ID 배열입니다.
+     * @throws 등록되지 않은 태그, 스트리밍 사이트가 있을 경우 'BadRequestException'이 발생합니다.
      */
-    private async tagNameValidation(categories: string[], tags: string[], streamings: string[]): Promise<{ categoryIDs: number[], tagIDs: number[], streamingIDs: number[] }> {
+    private async tagNameValidation(tags: string[], streamings: string[]): Promise<{ tagIDs: number[], streamingIDs: number[] }> {
         let categoryIDs: number[] = [], tagIDs: number[] = [], streamingIDs: number[] = [];
         try {
-            if (categories) {
-                const allCategory = await this.categoryRepository.findAllCategory();
-                categoryIDs = getMatchingIds(tags, allCategory);
-                if (categories.length !== categoryIDs.length) {
-                    throw new BadRequestException('등록되지 않은 카테고리입니다.');
-                }
-            }
             if (tags) {
                 const allTag = await this.tagRepository.findAllTag();
                 tagIDs = getMatchingIds(tags, allTag);
@@ -161,12 +139,11 @@ export class AnimationInfoService {
             throw err;
         }
 
-        return { categoryIDs, tagIDs, streamingIDs };
+        return { tagIDs, streamingIDs };
     }
 
     private cleanInfoConversion(originalData: AnimationInfo): CreateAnimationInfoDto {
         const modifiedObject = JSON.parse(JSON.stringify(originalData));
-        modifiedObject.categories = originalData.categories.map(category => category.category.category);
         modifiedObject.tags = originalData.tags.map(tag => tag.tag.tag);
         modifiedObject.streamings = originalData.streamings.map(streaming => streaming.streaming.streaming);
         return modifiedObject;
@@ -183,8 +160,8 @@ function getMatchingIds(array: string[], allArray: ObjectService[]): number[] {
     const matchingIds: number[] = [];
   
     for (const service of allArray) {
-      const { id, streaming, tag, category } = service;
-      const lowerCasedStreaming = (streaming || tag || category || "").toLowerCase();
+      const { id, streaming, tag } = service;
+      const lowerCasedStreaming = (streaming || tag || "").toLowerCase();
 
       if (array.includes(lowerCasedStreaming)) {
         matchingIds.push(id);
@@ -197,5 +174,4 @@ type ObjectService = {
     id: number;
     streaming?: string;
     tag?: string;
-    category?: string;
 };
