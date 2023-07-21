@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>recom</title>
+    <link rel="stylesheet" href="recom.css">
+</head>
+<body>
+    <div id="recom-container">
+        <div id="arrow">
+            <button id="left-arrow" onclick="prevAnime()"><img src="./img/arrow.png"></button>
+            <button id="right-arrow" onclick="nextAnime()"><img src="./img/arrow.png"></button>
+        </div>
+        <div id="recom">
+            <img id="poster">
+            <div id="info-container">
+                <div id="info">
+                    <div id="title-box"><h1 id="title"></h1><img id="rated"></div>
+                    <span id="aired"></span>
+                    <p id="summary"></p>
+                    <hr>
+                    <div id="studio"></div>
+                    <div id="streams"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="recom-design.js"></script>
+</html>

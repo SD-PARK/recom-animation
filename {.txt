@@ -1,0 +1,12 @@
+{
+	"title": "",
+	"image": "",
+	"aired": 2023,
+	"studio": "",
+	"summary": "",
+	"rated": 15,
+	"tags": [],
+	"streamings": []
+}
+
+진행상황: 2023년 4월 / 월~금

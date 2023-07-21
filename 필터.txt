@@ -1,0 +1,30 @@
+1. 심의 등급 필터
+2. 비선호 카테고리 및 장르 필터
+3. 카테고리 및 장르가 모두 포함된 작품 PUSH / 10개 이상이라면 RANDOM PUSH
+WHILE ( 10개가 다 모이지 않았을 경우 )
+4-1. 카테고리 및 장르의 개수를 하나씩 빼면서 RANDOM으로 하나씩 PUSH
+BREAK
+4-2. 반환.
+
+SELECT animation_id
+FROM tags
+WHERE tag_id IN (3, 4)
+GROUP BY animation_id
+HAVING COUNT(DISTINCT tag_id) = 2
+AND animation_id IN (
+    SELECT animation_id
+    FROM categories
+    WHERE category_id IN (1, 2)
+    GROUP BY animation_id
+    HAVING COUNT(DISTINCT category_id) = 2
+);
+
+SELECT t1.animation_id
+FROM tags AS t1
+JOIN tags AS t2 ON t1.animation_id = t2.animation_id
+JOIN categories AS c ON t1.animation_id = c.animation_id
+WHERE t1.tag_id IN (3, 4)
+  AND c.category_id IN (1, 2, 3)
+GROUP BY t1.animation_id
+HAVING COUNT(DISTINCT t1.tag_id) = 2
+  AND COUNT(DISTINCT c.category_id) = 3;
